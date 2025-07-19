@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace PayPHP\Services;
 
 use InvalidArgumentException;
-use Money\Currency;
-use Money\Money;
+use PayPHP\Actions\CalculateWeeklyTaxAllowance;
 use PayPHP\Dto\TaxCode;
 
 final class TaxCodeParsingService
@@ -24,21 +23,44 @@ final class TaxCodeParsingService
         $taxCode->isEmergency = $this->isEmergencyCode($taxCodeString);
         $taxCode->isCumulative = ! $this->isNonCumulativeCode($taxCodeString);
 
-        // Determine region from prefix
-        if (str_starts_with($taxCodeString, 'S')) {
-            $taxCode->region = 'scotland';
-            $taxCodeString = mb_substr($taxCodeString, 1);
-        } elseif (str_starts_with($taxCodeString, 'C')) {
-            $taxCode->region = 'wales';
-            $taxCodeString = mb_substr($taxCodeString, 1);
-        } else {
-            $taxCode->region = 'uk';
-        }
+        // Parse all prefixes (regional and K)
+        $parsedPrefixes = $this->parsePrefixes($taxCodeString);
+        $taxCode->region = $parsedPrefixes['region'];
+        $taxCode->isAllowanceNegative = $parsedPrefixes['isNegative'];
+        $remainingCode = $parsedPrefixes['remainingCode'];
 
-        // Extract suffix and numeric part
-        $this->parseCodeComponents($taxCodeString, $taxCode);
+        // Extract suffix and numeric part from the remaining code
+        $this->parseCodeComponents($remainingCode, $taxCode);
 
         return $taxCode;
+    }
+
+    private function parsePrefixes(string $taxCode): array
+    {
+        $region = 'uk';
+        $isNegative = false;
+        $remainingCode = $taxCode;
+
+        // Check for regional prefix first (S or C)
+        if (str_starts_with($taxCode, 'S')) {
+            $region = 'scotland';
+            $remainingCode = mb_substr($remainingCode, 1);
+        } elseif (str_starts_with($taxCode, 'C')) {
+            $region = 'wales';
+            $remainingCode = mb_substr($remainingCode, 1);
+        }
+
+        // Check for K prefix (negative allowance) after regional prefix
+        if (str_starts_with($remainingCode, 'K')) {
+            $isNegative = true;
+            $remainingCode = mb_substr($remainingCode, 1);
+        }
+
+        return [
+            'region' => $region,
+            'isNegative' => $isNegative,
+            'remainingCode' => $remainingCode,
+        ];
     }
 
     private function parseCodeComponents(string $taxCode, TaxCode $taxCodeObj): void
@@ -51,16 +73,15 @@ final class TaxCodeParsingService
             return;
         }
 
-        if ($this->isKCode($cleanCode)) {
+        if ($this->isStandardCode($cleanCode)) {
             $this->handleStandardCode($cleanCode, $taxCodeObj);
-            $taxCodeObj->suffix = 'K';
-            $taxCodeObj->isAllowanceNegative = true;
 
             return;
         }
 
-        if ($this->isStandardCode($cleanCode)) {
-            $this->handleStandardCode($cleanCode, $taxCodeObj);
+        // Handle numeric-only codes (like after K prefix removal)
+        if ($this->isNumericOnlyCode($cleanCode)) {
+            $this->handleNumericOnlyCode($cleanCode, $taxCodeObj);
 
             return;
         }
@@ -78,14 +99,14 @@ final class TaxCodeParsingService
         return isset($this->getSpecialCodes()[$code]);
     }
 
-    private function isKCode(string $code): bool
-    {
-        return (bool) preg_match('/^K(\d+)$/', $code);
-    }
-
     private function isStandardCode(string $code): bool
     {
         return (bool) preg_match('/^(\d+)([LMNT])$/', $code);
+    }
+
+    private function isNumericOnlyCode(string $code): bool
+    {
+        return (bool) preg_match('/^(\d+)$/', $code);
     }
 
     private function handleSpecialCode(string $code, TaxCode $taxCodeObj): void
@@ -93,32 +114,49 @@ final class TaxCodeParsingService
         $codeData = $this->getSpecialCodes()[$code];
         $taxCodeObj->suffix = $codeData['suffix'];
         $taxCodeObj->numericPart = $codeData['numericPart'];
-        $taxCodeObj->allowance = new Money((int) ($codeData['allowance'] * 100), new Currency('GBP'));
+        $taxCodeObj->allowance = $codeData['allowance'];
     }
 
     private function handleStandardCode(string $code, TaxCode $taxCodeObj): void
     {
-        preg_match('/^(\d+)([LMNTk])$/', $code, $matches);
+        preg_match('/^(\d+)([LMNT])$/', $code, $matches);
 
         $numericPart = (int) $matches[1];
         $suffix = $matches[2];
-        // TODO: Implement full IT Spec Logic for allowances
-        $adjustedAllowance = $numericPart;
+
+        $this->setAllowanceFromNumericPart($numericPart, $suffix, $taxCodeObj);
 
         $taxCodeObj->numericPart = $numericPart;
         $taxCodeObj->suffix = $suffix;
-        $taxCodeObj->allowance = new Money((int) ($adjustedAllowance * 100), new Currency('GBP'));
+    }
+
+    private function handleNumericOnlyCode(string $code, TaxCode $taxCodeObj): void
+    {
+        $numericPart = (int) $code;
+
+        // For K codes, we typically don't have a suffix, or it's implied as 'L'
+        $suffix = $taxCodeObj->isAllowanceNegative ? 'K' : 'L';
+
+        $this->setAllowanceFromNumericPart($numericPart, $suffix, $taxCodeObj);
+
+        $taxCodeObj->numericPart = $numericPart;
+        $taxCodeObj->suffix = $suffix;
+    }
+
+    private function setAllowanceFromNumericPart(int $numericPart, string $suffix, TaxCode $taxCodeObj): void
+    {
+        $taxCodeObj->allowance = CalculateWeeklyTaxAllowance::calculate($numericPart);
     }
 
     private function getSpecialCodes(): array
     {
         return [
-            'BR' => ['suffix' => 'BR', 'numericPart' => 0, 'allowance' => 0],
-            'D0' => ['suffix' => 'D0', 'numericPart' => 0, 'allowance' => 0],
-            'D1' => ['suffix' => 'D1', 'numericPart' => 0, 'allowance' => 0],
-            'D2' => ['suffix' => 'D1', 'numericPart' => 0, 'allowance' => 0],
-            'NT' => ['suffix' => 'NT', 'numericPart' => 0, 'allowance' => PHP_INT_MAX / 100],
-            '0T' => ['suffix' => '0T', 'numericPart' => 0, 'allowance' => 0],
+            'BR' => ['suffix' => 'BR', 'numericPart' => 0, 'allowance' => 0.0],
+            'D0' => ['suffix' => 'D0', 'numericPart' => 0, 'allowance' => 0.0],
+            'D1' => ['suffix' => 'D1', 'numericPart' => 0, 'allowance' => 0.0],
+            'D2' => ['suffix' => 'D2', 'numericPart' => 0, 'allowance' => 0.0],
+            'NT' => ['suffix' => 'NT', 'numericPart' => 0, 'allowance' => 999999.99], // Large float for no tax
+            '0T' => ['suffix' => '0T', 'numericPart' => 0, 'allowance' => 0.0],
         ];
     }
 
@@ -126,7 +164,7 @@ final class TaxCodeParsingService
     {
         return str_contains($taxCode, 'X') ||
             str_contains($taxCode, 'EMERGENCY') ||
-            preg_match('/\d+[LMN]X$/', $taxCode);
+            preg_match('/\d+[LMNT]X$/', $taxCode);
     }
 
     private function isNonCumulativeCode(string $taxCode): bool
