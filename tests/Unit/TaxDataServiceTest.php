@@ -46,7 +46,7 @@ describe('UK Region Tax Data', function () {
             ->and($bands['additional']['start'])->toBe(2406)
             ->and($bands['additional']['end'])->toBeNull();
     });
-    
+
     it('returns correct UK tax bands with monthly period', function () {
         $bands = $this->taxDataService->getBandsForRegion('uk', 'monthly');
 
@@ -74,7 +74,7 @@ describe('UK Region Tax Data', function () {
             ->and($taxData['bands']['higher']['end'])->toBe(2406)
             ->and($taxData['bands']['additional']['start'])->toBe(2406);
     });
-    
+
     it('gets complete tax data for UK tax code with monthly period', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');
@@ -115,7 +115,7 @@ describe('Wales Region Tax Data', function () {
             ->and($bands['additional']['start'])->toBe(2406)
             ->and($bands['additional']['end'])->toBeNull();
     });
-    
+
     it('returns correct Welsh tax bands with monthly period', function () {
         $bands = $this->taxDataService->getBandsForRegion('wales', 'monthly');
 
@@ -142,7 +142,7 @@ describe('Wales Region Tax Data', function () {
             ->and($taxData['bands']['higher']['end'])->toBe(2406)
             ->and($taxData['bands']['additional']['start'])->toBe(2406);
     });
-    
+
     it('gets complete tax data for Welsh tax code with monthly period', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('C1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');
@@ -197,7 +197,7 @@ describe('Scotland Region Tax Data', function () {
             ->and($bands['top']['start'])->toBe(2406)
             ->and($bands['top']['end'])->toBeNull();
     });
-    
+
     it('returns correct Scottish tax bands with monthly period', function () {
         $bands = $this->taxDataService->getBandsForRegion('scotland', 'monthly');
 
@@ -240,7 +240,7 @@ describe('Scotland Region Tax Data', function () {
             ->and($taxData['bands']['advanced']['end'])->toBe(2406)
             ->and($taxData['bands']['top']['start'])->toBe(2406);
     });
-    
+
     it('gets complete tax data for Scottish tax code with monthly period', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('S1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');

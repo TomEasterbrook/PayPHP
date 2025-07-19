@@ -41,6 +41,7 @@ final class TaxDataService
             $data[$newKey] = $data[$key];
             unset($data[$key]);
         }
+
         return $data;
     }
 
@@ -60,12 +61,13 @@ final class TaxDataService
         // Convert annual values to weekly or monthly values
         foreach ($bands as $bandName => $band) {
             if ($band['start'] !== null) {
-                $bands[$bandName]['start'] = (int)floor($band['start'] / $divisor);
+                $bands[$bandName]['start'] = (int) floor($band['start'] / $divisor);
             }
             if ($band['end'] !== null) {
-                $bands[$bandName]['end'] = (int)floor($band['end'] / $divisor);
+                $bands[$bandName]['end'] = (int) floor($band['end'] / $divisor);
             }
         }
+
         return $bands;
     }
 
