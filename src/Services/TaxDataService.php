@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PayPHP\Services;
@@ -15,31 +16,45 @@ final class TaxDataService
         $this->taxData = $taxData;
     }
 
+    public static function fromJsonFile(string $filePath): self
+    {
+        $data = json_decode(file_get_contents($filePath), true);
+
+        return new self($data);
+    }
+
     public function getRatesForRegion(string $region): array
     {
-        if (!isset($this->taxData['regions'][$region])) {
+        if (! isset($this->taxData['regions'][$region])) {
             throw new InvalidArgumentException("Unknown region: {$region}");
         }
 
         $data = $this->taxData['regions'][$region];
 
         // Remove bands from the data, keep only rates
-        return array_filter($data, function($key) {
-            return !str_ends_with($key, 'Band');
+        $data = array_filter($data, function ($key) {
+            return str_ends_with($key, 'Rate');
         }, ARRAY_FILTER_USE_KEY);
+
+        foreach (array_keys($data) as $key) {
+            $newKey = str_replace('Rate', '', $key);
+            $data[$newKey] = $data[$key];
+            unset($data[$key]);
+        }
+        return $data;
     }
 
     public function getBandsForRegion(string $region): array
     {
-        if (!isset($this->taxData['regions'][$region])) {
+        if (! isset($this->taxData['regions'][$region])) {
             throw new InvalidArgumentException("Unknown region: {$region}");
         }
 
         $data = $this->taxData['regions'][$region];
 
         // Get only the band data
-        return array_filter($data, function($key) {
-            return str_ends_with($key, 'Band');
+        return array_filter($data, function ($key) {
+            return ! str_ends_with($key, 'Rate');
         }, ARRAY_FILTER_USE_KEY);
     }
 
@@ -47,13 +62,7 @@ final class TaxDataService
     {
         return [
             'rates' => $this->getRatesForRegion($taxCode->region),
-            'bands' => $this->getBandsForRegion($taxCode->region)
+            'bands' => $this->getBandsForRegion($taxCode->region),
         ];
-    }
-
-    public static function fromJsonFile(string $filePath): self
-    {
-        $data = json_decode(file_get_contents($filePath), true);
-        return new self($data);
     }
 }

@@ -1,10 +1,9 @@
 <?php
 
-
 declare(strict_types=1);
 
-use PayPHP\Services\TaxDataService;
 use PayPHP\Services\TaxCodeParsingService;
+use PayPHP\Services\TaxDataService;
 
 beforeEach(function () {
     $this->taxDataService = TaxDataService::fromJsonFile('data/TaxYears/2025-26.json');
@@ -17,7 +16,7 @@ describe('Tax Data Service - Basic Functionality', function () {
     });
 
     it('throws exception for non-existent file', function () {
-        expect(fn() => TaxDataService::fromJsonFile('non-existent-file.json'))
+        expect(fn () => TaxDataService::fromJsonFile('non-existent-file.json'))
             ->toThrow(Error::class);
     });
 });
@@ -26,26 +25,26 @@ describe('UK Region Tax Data', function () {
     it('returns correct UK tax rates', function () {
         $rates = $this->taxDataService->getRatesForRegion('uk');
 
-        expect($rates)->toHaveKey('basicRate')
-            ->and($rates)->toHaveKey('higherRate')
-            ->and($rates)->toHaveKey('additionalRate')
-            ->and($rates['basicRate'])->toBe(0.20)
-            ->and($rates['higherRate'])->toBe(0.40)
-            ->and($rates['additionalRate'])->toBe(0.45);
+        expect($rates)->toHaveKey('basic')
+            ->and($rates)->toHaveKey('higher')
+            ->and($rates)->toHaveKey('additional')
+            ->and($rates['basic'])->toBe(0.20)
+            ->and($rates['higher'])->toBe(0.40)
+            ->and($rates['additional'])->toBe(0.45);
     });
 
     it('returns correct UK tax bands', function () {
         $bands = $this->taxDataService->getBandsForRegion('uk');
 
-        expect($bands)->toHaveKey('basicRateBand')
-            ->and($bands)->toHaveKey('higherRateBand')
-            ->and($bands)->toHaveKey('additionalRateBand')
-            ->and($bands['basicRateBand']['start'])->toBe(241)
-            ->and($bands['basicRateBand']['end'])->toBe(966)
-            ->and($bands['higherRateBand']['start'])->toBe(967)
-            ->and($bands['higherRateBand']['end'])->toBe(2406)
-            ->and($bands['additionalRateBand']['start'])->toBe(2407)
-            ->and($bands['additionalRateBand']['end'])->toBeNull();
+        expect($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('additional')
+            ->and($bands['basic']['start'])->toBe(241)
+            ->and($bands['basic']['end'])->toBe(966)
+            ->and($bands['higher']['start'])->toBe(967)
+            ->and($bands['higher']['end'])->toBe(2406)
+            ->and($bands['additional']['start'])->toBe(2407)
+            ->and($bands['additional']['end'])->toBeNull();
     });
 
     it('gets complete tax data for UK tax code', function () {
@@ -54,8 +53,8 @@ describe('UK Region Tax Data', function () {
 
         expect($taxData)->toHaveKey('rates')
             ->and($taxData)->toHaveKey('bands')
-            ->and($taxData['rates']['basicRate'])->toBe(0.20)
-            ->and($taxData['bands']['basicRateBand']['start'])->toBe(241);
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['basic']['start'])->toBe(241);
     });
 });
 
@@ -63,22 +62,22 @@ describe('Wales Region Tax Data', function () {
     it('returns correct Welsh tax rates', function () {
         $rates = $this->taxDataService->getRatesForRegion('wales');
 
-        expect($rates)->toHaveKey('basicRate')
-            ->and($rates)->toHaveKey('higherRate')
-            ->and($rates)->toHaveKey('additionalRate')
-            ->and($rates['basicRate'])->toBe(0.20)
-            ->and($rates['higherRate'])->toBe(0.40)
-            ->and($rates['additionalRate'])->toBe(0.45);
+        expect($rates)->toHaveKey('basic')
+            ->and($rates)->toHaveKey('higher')
+            ->and($rates)->toHaveKey('additional')
+            ->and($rates['basic'])->toBe(0.20)
+            ->and($rates['higher'])->toBe(0.40)
+            ->and($rates['additional'])->toBe(0.45);
     });
 
     it('returns correct Welsh tax bands', function () {
         $bands = $this->taxDataService->getBandsForRegion('wales');
 
-        expect($bands)->toHaveKey('basicRateBand')
-            ->and($bands)->toHaveKey('higherRateBand')
-            ->and($bands)->toHaveKey('additionalRateBand')
-            ->and($bands['basicRateBand']['start'])->toBe(241)
-            ->and($bands['basicRateBand']['end'])->toBe(966);
+        expect($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('additional')
+            ->and($bands['basic']['start'])->toBe(241)
+            ->and($bands['basic']['end'])->toBe(966);
     });
 
     it('gets complete tax data for Welsh tax code', function () {
@@ -86,8 +85,8 @@ describe('Wales Region Tax Data', function () {
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode);
 
         expect($taxCode->region)->toBe('wales')
-            ->and($taxData['rates']['basicRate'])->toBe(0.20)
-            ->and($taxData['bands']['basicRateBand']['start'])->toBe(241);
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['basic']['start'])->toBe(241);
     });
 });
 
@@ -95,41 +94,41 @@ describe('Scotland Region Tax Data', function () {
     it('returns correct Scottish tax rates', function () {
         $rates = $this->taxDataService->getRatesForRegion('scotland');
 
-        expect($rates)->toHaveKey('starterRate')
-            ->and($rates)->toHaveKey('basicRate')
-            ->and($rates)->toHaveKey('intermediateRate')
-            ->and($rates)->toHaveKey('higherRate')
-            ->and($rates)->toHaveKey('advancedRate')
-            ->and($rates)->toHaveKey('topRate')
-            ->and($rates['starterRate'])->toBe(0.19)
-            ->and($rates['basicRate'])->toBe(0.20)
-            ->and($rates['intermediateRate'])->toBe(0.21)
-            ->and($rates['higherRate'])->toBe(0.42)
-            ->and($rates['advancedRate'])->toBe(0.45)
-            ->and($rates['topRate'])->toBe(0.48);
+        expect($rates)->toHaveKey('starter')
+            ->and($rates)->toHaveKey('basic')
+            ->and($rates)->toHaveKey('intermediate')
+            ->and($rates)->toHaveKey('higher')
+            ->and($rates)->toHaveKey('advanced')
+            ->and($rates)->toHaveKey('top')
+            ->and($rates['starter'])->toBe(0.19)
+            ->and($rates['basic'])->toBe(0.20)
+            ->and($rates['intermediate'])->toBe(0.21)
+            ->and($rates['higher'])->toBe(0.42)
+            ->and($rates['advanced'])->toBe(0.45)
+            ->and($rates['top'])->toBe(0.48);
     });
 
     it('returns correct Scottish tax bands', function () {
         $bands = $this->taxDataService->getBandsForRegion('scotland');
 
-        expect($bands)->toHaveKey('starterRateBand')
-            ->and($bands)->toHaveKey('basicRateBand')
-            ->and($bands)->toHaveKey('intermediateRateBand')
-            ->and($bands)->toHaveKey('higherRateBand')
-            ->and($bands)->toHaveKey('advancedRateBand')
-            ->and($bands)->toHaveKey('topRateBand')
-            ->and($bands['starterRateBand']['start'])->toBe(241)
-            ->and($bands['starterRateBand']['end'])->toBe(296)
-            ->and($bands['basicRateBand']['start'])->toBe(297)
-            ->and($bands['basicRateBand']['end'])->toBe(528)
-            ->and($bands['intermediateRateBand']['start'])->toBe(529)
-            ->and($bands['intermediateRateBand']['end'])->toBe(840)
-            ->and($bands['higherRateBand']['start'])->toBe(841)
-            ->and($bands['higherRateBand']['end'])->toBe(1442)
-            ->and($bands['advancedRateBand']['start'])->toBe(1443)
-            ->and($bands['advancedRateBand']['end'])->toBe(2406)
-            ->and($bands['topRateBand']['start'])->toBe(2407)
-            ->and($bands['topRateBand']['end'])->toBeNull();
+        expect($bands)->toHaveKey('starter')
+            ->and($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('intermediate')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('advanced')
+            ->and($bands)->toHaveKey('top')
+            ->and($bands['starter']['start'])->toBe(241)
+            ->and($bands['starter']['end'])->toBe(296)
+            ->and($bands['basic']['start'])->toBe(297)
+            ->and($bands['basic']['end'])->toBe(528)
+            ->and($bands['intermediate']['start'])->toBe(529)
+            ->and($bands['intermediate']['end'])->toBe(840)
+            ->and($bands['higher']['start'])->toBe(841)
+            ->and($bands['higher']['end'])->toBe(1442)
+            ->and($bands['advanced']['start'])->toBe(1443)
+            ->and($bands['advanced']['end'])->toBe(2406)
+            ->and($bands['top']['start'])->toBe(2407)
+            ->and($bands['top']['end'])->toBeNull();
     });
 
     it('gets complete tax data for Scottish tax code', function () {
@@ -137,10 +136,10 @@ describe('Scotland Region Tax Data', function () {
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode);
 
         expect($taxCode->region)->toBe('scotland')
-            ->and($taxData['rates']['starterRate'])->toBe(0.19)
-            ->and($taxData['rates']['basicRate'])->toBe(0.20)
-            ->and($taxData['bands']['starterRateBand']['start'])->toBe(241)
-            ->and($taxData['bands']['basicRateBand']['start'])->toBe(297);
+            ->and($taxData['rates']['starter'])->toBe(0.19)
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['starter']['start'])->toBe(241)
+            ->and($taxData['bands']['basic']['start'])->toBe(297);
     });
 });
 
@@ -151,7 +150,7 @@ describe('Tax Data Service with Different Tax Codes', function () {
 
         expect($taxCode->region)->toBe('uk')
             ->and($taxCode->isEmergency)->toBeTrue()
-            ->and($taxData['rates']['basicRate'])->toBe(0.20);
+            ->and($taxData['rates']['basic'])->toBe(0.20);
     });
 
     it('correctly handles Welsh K codes', function () {
@@ -160,7 +159,7 @@ describe('Tax Data Service with Different Tax Codes', function () {
 
         expect($taxCode->region)->toBe('wales')
             ->and($taxCode->isAllowanceNegative)->toBeTrue()
-            ->and($taxData['rates']['basicRate'])->toBe(0.20);
+            ->and($taxData['rates']['basic'])->toBe(0.20);
     });
 
     it('correctly handles Scottish K codes', function () {
@@ -169,8 +168,8 @@ describe('Tax Data Service with Different Tax Codes', function () {
 
         expect($taxCode->region)->toBe('scotland')
             ->and($taxCode->isAllowanceNegative)->toBeTrue()
-            ->and($taxData['rates']['starterRate'])->toBe(0.19)
-            ->and($taxData['rates']['basicRate'])->toBe(0.20);
+            ->and($taxData['rates']['starter'])->toBe(0.19)
+            ->and($taxData['rates']['basic'])->toBe(0.20);
     });
 
     it('correctly handles complex Scottish codes', function () {
@@ -180,24 +179,24 @@ describe('Tax Data Service with Different Tax Codes', function () {
         expect($taxCode->region)->toBe('scotland')
             ->and($taxCode->isAllowanceNegative)->toBeTrue()
             ->and($taxCode->isEmergency)->toBeTrue()
-            ->and($taxData['rates']['intermediateRate'])->toBe(0.21);
+            ->and($taxData['rates']['intermediate'])->toBe(0.21);
     });
 });
 
 describe('Error Handling', function () {
     it('throws exception for invalid region', function () {
-        expect(fn() => $this->taxDataService->getRatesForRegion('invalid'))
+        expect(fn () => $this->taxDataService->getRatesForRegion('invalid'))
             ->toThrow(InvalidArgumentException::class, 'Unknown region: invalid');
     });
 
     it('throws exception for invalid region in bands', function () {
-        expect(fn() => $this->taxDataService->getBandsForRegion('nonexistent'))
+        expect(fn () => $this->taxDataService->getBandsForRegion('nonexistent'))
             ->toThrow(InvalidArgumentException::class, 'Unknown region: nonexistent');
     });
 
     it('handles invalid tax code gracefully', function () {
         // The tax code parser will throw an exception for invalid codes
-        expect(fn() => $this->taxCodeParser->parseTaxCode('INVALID123'))
+        expect(fn () => $this->taxCodeParser->parseTaxCode('INVALID123'))
             ->toThrow(InvalidArgumentException::class);
     });
 });
@@ -221,13 +220,15 @@ describe('Data Structure Validation', function () {
         $ukBands = $this->taxDataService->getBandsForRegion('uk');
         $scottishBands = $this->taxDataService->getBandsForRegion('scotland');
 
-        // Check all keys end with 'Band'
-        foreach (array_keys($ukBands) as $key) {
-            expect(str_ends_with($key, 'Band'))->toBeTrue();
+        // Check bands appear in bands
+        foreach ($ukBands as $band) {
+            expect($band)->toHaveKey('start')
+                ->and($band)->toHaveKey('end');
         }
 
-        foreach (array_keys($scottishBands) as $key) {
-            expect(str_ends_with($key, 'Band'))->toBeTrue();
+        foreach ($scottishBands as $band) {
+            expect($band)->toHaveKey('start')
+                ->and($band)->toHaveKey('end');
         }
     });
 
@@ -252,7 +253,7 @@ describe('Integration Tests', function () {
         $testCodes = [
             'uk' => '1257L',
             'wales' => 'C1257L',
-            'scotland' => 'S1257L'
+            'scotland' => 'S1257L',
         ];
 
         foreach ($testCodes as $expectedRegion => $codeString) {

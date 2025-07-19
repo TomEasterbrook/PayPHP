@@ -5,15 +5,15 @@
       "basicRate": 0.20,
       "higherRate": 0.40,
       "additionalRate": 0.45,
-      "basicRateBand": {
+      "basic": {
         "start": 241,
         "end": 966
       },
-      "higherRateBand": {
+      "higher": {
         "start": 967,
         "end": 2406
       },
-      "additionalRateBand": {
+      "additional": {
         "start": 2407,
         "end": null
       }
@@ -22,15 +22,15 @@
       "basicRate": 0.20,
       "higherRate": 0.40,
       "additionalRate": 0.45,
-      "basicRateBand": {
+      "basic": {
         "start": 241,
         "end": 966
       },
-      "higherRateBand": {
+      "higher": {
         "start": 967,
         "end": 2406
       },
-      "additionalRateBand": {
+      "additional": {
         "start": 2407,
         "end": null
       }
@@ -42,27 +42,27 @@
       "higherRate": 0.42,
       "advancedRate": 0.45,
       "topRate": 0.48,
-      "starterRateBand": {
+      "starter": {
         "start": 241,
         "end": 296
       },
-      "basicRateBand": {
+      "basic": {
         "start": 297,
         "end": 528
       },
-      "intermediateRateBand": {
+      "intermediate": {
         "start": 529,
         "end": 840
       },
-      "higherRateBand": {
+      "higher": {
         "start": 841,
         "end": 1442
       },
-      "advancedRateBand": {
+      "advanced": {
         "start": 1443,
         "end": 2406
       },
-      "topRateBand": {
+      "top": {
         "start": 2407,
         "end": null
       }
