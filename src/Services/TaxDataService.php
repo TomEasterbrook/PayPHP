@@ -44,7 +44,7 @@ final class TaxDataService
         return $data;
     }
 
-    public function getBandsForRegion(string $region): array
+    public function getBandsForRegion(string $region, string $period = 'weekly'): array
     {
         if (! isset($this->taxData['regions'][$region])) {
             throw new InvalidArgumentException("Unknown region: {$region}");
@@ -53,16 +53,27 @@ final class TaxDataService
         $data = $this->taxData['regions'][$region];
 
         // Get only the band data
-        return array_filter($data, function ($key) {
+        $bands = array_filter($data, function ($key) {
             return ! str_ends_with($key, 'Rate');
         }, ARRAY_FILTER_USE_KEY);
+        $divisor = $period === 'weekly' ? 52 : 12;
+        // Convert annual values to weekly or monthly values
+        foreach ($bands as $bandName => $band) {
+            if ($band['start'] !== null) {
+                $bands[$bandName]['start'] = (int)floor($band['start'] / $divisor);
+            }
+            if ($band['end'] !== null) {
+                $bands[$bandName]['end'] = (int)floor($band['end'] / $divisor);
+            }
+        }
+        return $bands;
     }
 
-    public function getTaxDataForTaxCode(TaxCode $taxCode): array
+    public function getTaxDataForTaxCode(TaxCode $taxCode, string $period = 'weekly'): array
     {
         return [
             'rates' => $this->getRatesForRegion($taxCode->region),
-            'bands' => $this->getBandsForRegion($taxCode->region),
+            'bands' => $this->getBandsForRegion($taxCode->region, $period),
         ];
     }
 }

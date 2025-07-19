@@ -6,15 +6,15 @@
       "higherRate": 0.40,
       "additionalRate": 0.45,
       "basic": {
-        "start": 241,
-        "end": 966
+        "start": 12571,
+        "end": 50270
       },
       "higher": {
-        "start": 967,
-        "end": 2406
+        "start": 50271,
+        "end": 125140
       },
       "additional": {
-        "start": 2407,
+        "start": 125141,
         "end": null
       }
     },
@@ -23,15 +23,15 @@
       "higherRate": 0.40,
       "additionalRate": 0.45,
       "basic": {
-        "start": 241,
-        "end": 966
+        "start": 12571,
+        "end": 50270
       },
       "higher": {
-        "start": 967,
-        "end": 2406
+        "start": 50271,
+        "end": 125140
       },
       "additional": {
-        "start": 2407,
+        "start": 125141,
         "end": null
       }
     },
@@ -43,51 +43,52 @@
       "advancedRate": 0.45,
       "topRate": 0.48,
       "starter": {
-        "start": 241,
-        "end": 296
+        "start": 12571,
+        "end": 15397
       },
       "basic": {
-        "start": 297,
-        "end": 528
+        "start": 15398,
+        "end": 27491
       },
       "intermediate": {
-        "start": 529,
-        "end": 840
+        "start": 27492,
+        "end": 43662
       },
       "higher": {
-        "start": 841,
-        "end": 1442
+        "start": 43663,
+        "end": 75000
       },
       "advanced": {
-        "start": 1443,
-        "end": 2406
+        "start": 75001,
+        "end": 125140
       },
       "top": {
-        "start": 2407,
+        "start": 125141,
         "end": null
       }
     }
   },
+  "personalAllowance": 12570,
   "ni": {
     "class1Employee": {
-      "primaryThreshold": 241,
-      "upperEarningsLimit": 966,
+      "primaryThreshold": 12570,
+      "upperEarningsLimit": 50270,
       "lowerRate": 0.08,
       "upperRate": 0.02
     },
     "class1Employer": {
-      "secondaryThreshold": 96,
+      "secondaryThreshold": 5000,
       "rate": 0.15
     }
   },
   "studentLoan": {
-    "plan1Threshold": 501,
+    "plan1Threshold": 26065,
     "plan1Rate": 0.09,
-    "plan2Threshold": 547,
+    "plan2Threshold": 28470,
     "plan2Rate": 0.09,
-    "plan4Threshold": 629,
+    "plan4Threshold": 32745,
     "plan4Rate": 0.09,
-    "postgradThreshold": 403,
+    "postgradThreshold": 21000,
     "postgradRate": 0.06
   }
 }

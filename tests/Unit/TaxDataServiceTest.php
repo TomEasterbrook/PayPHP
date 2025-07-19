@@ -33,7 +33,7 @@ describe('UK Region Tax Data', function () {
             ->and($rates['additional'])->toBe(0.45);
     });
 
-    it('returns correct UK tax bands', function () {
+    it('returns correct UK tax bands with weekly period (default)', function () {
         $bands = $this->taxDataService->getBandsForRegion('uk');
 
         expect($bands)->toHaveKey('basic')
@@ -41,20 +41,52 @@ describe('UK Region Tax Data', function () {
             ->and($bands)->toHaveKey('additional')
             ->and($bands['basic']['start'])->toBe(241)
             ->and($bands['basic']['end'])->toBe(966)
-            ->and($bands['higher']['start'])->toBe(967)
+            ->and($bands['higher']['start'])->toBe(966)
             ->and($bands['higher']['end'])->toBe(2406)
-            ->and($bands['additional']['start'])->toBe(2407)
+            ->and($bands['additional']['start'])->toBe(2406)
+            ->and($bands['additional']['end'])->toBeNull();
+    });
+    
+    it('returns correct UK tax bands with monthly period', function () {
+        $bands = $this->taxDataService->getBandsForRegion('uk', 'monthly');
+
+        expect($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('additional')
+            ->and($bands['basic']['start'])->toBe(1047)
+            ->and($bands['basic']['end'])->toBe(4189)
+            ->and($bands['higher']['start'])->toBe(4189)
+            ->and($bands['higher']['end'])->toBe(10428)
+            ->and($bands['additional']['start'])->toBe(10428)
             ->and($bands['additional']['end'])->toBeNull();
     });
 
-    it('gets complete tax data for UK tax code', function () {
+    it('gets complete tax data for UK tax code with weekly period (default)', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode);
 
         expect($taxData)->toHaveKey('rates')
             ->and($taxData)->toHaveKey('bands')
             ->and($taxData['rates']['basic'])->toBe(0.20)
-            ->and($taxData['bands']['basic']['start'])->toBe(241);
+            ->and($taxData['bands']['basic']['start'])->toBe(241)
+            ->and($taxData['bands']['basic']['end'])->toBe(966)
+            ->and($taxData['bands']['higher']['start'])->toBe(966)
+            ->and($taxData['bands']['higher']['end'])->toBe(2406)
+            ->and($taxData['bands']['additional']['start'])->toBe(2406);
+    });
+    
+    it('gets complete tax data for UK tax code with monthly period', function () {
+        $taxCode = $this->taxCodeParser->parseTaxCode('1257L');
+        $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');
+
+        expect($taxData)->toHaveKey('rates')
+            ->and($taxData)->toHaveKey('bands')
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['basic']['start'])->toBe(1047)
+            ->and($taxData['bands']['basic']['end'])->toBe(4189)
+            ->and($taxData['bands']['higher']['start'])->toBe(4189)
+            ->and($taxData['bands']['higher']['end'])->toBe(10428)
+            ->and($taxData['bands']['additional']['start'])->toBe(10428);
     });
 });
 
@@ -70,23 +102,58 @@ describe('Wales Region Tax Data', function () {
             ->and($rates['additional'])->toBe(0.45);
     });
 
-    it('returns correct Welsh tax bands', function () {
+    it('returns correct Welsh tax bands with weekly period (default)', function () {
         $bands = $this->taxDataService->getBandsForRegion('wales');
 
         expect($bands)->toHaveKey('basic')
             ->and($bands)->toHaveKey('higher')
             ->and($bands)->toHaveKey('additional')
             ->and($bands['basic']['start'])->toBe(241)
-            ->and($bands['basic']['end'])->toBe(966);
+            ->and($bands['basic']['end'])->toBe(966)
+            ->and($bands['higher']['start'])->toBe(966)
+            ->and($bands['higher']['end'])->toBe(2406)
+            ->and($bands['additional']['start'])->toBe(2406)
+            ->and($bands['additional']['end'])->toBeNull();
+    });
+    
+    it('returns correct Welsh tax bands with monthly period', function () {
+        $bands = $this->taxDataService->getBandsForRegion('wales', 'monthly');
+
+        expect($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('additional')
+            ->and($bands['basic']['start'])->toBe(1047)
+            ->and($bands['basic']['end'])->toBe(4189)
+            ->and($bands['higher']['start'])->toBe(4189)
+            ->and($bands['higher']['end'])->toBe(10428)
+            ->and($bands['additional']['start'])->toBe(10428)
+            ->and($bands['additional']['end'])->toBeNull();
     });
 
-    it('gets complete tax data for Welsh tax code', function () {
+    it('gets complete tax data for Welsh tax code with weekly period (default)', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('C1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode);
 
         expect($taxCode->region)->toBe('wales')
             ->and($taxData['rates']['basic'])->toBe(0.20)
-            ->and($taxData['bands']['basic']['start'])->toBe(241);
+            ->and($taxData['bands']['basic']['start'])->toBe(241)
+            ->and($taxData['bands']['basic']['end'])->toBe(966)
+            ->and($taxData['bands']['higher']['start'])->toBe(966)
+            ->and($taxData['bands']['higher']['end'])->toBe(2406)
+            ->and($taxData['bands']['additional']['start'])->toBe(2406);
+    });
+    
+    it('gets complete tax data for Welsh tax code with monthly period', function () {
+        $taxCode = $this->taxCodeParser->parseTaxCode('C1257L');
+        $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');
+
+        expect($taxCode->region)->toBe('wales')
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['basic']['start'])->toBe(1047)
+            ->and($taxData['bands']['basic']['end'])->toBe(4189)
+            ->and($taxData['bands']['higher']['start'])->toBe(4189)
+            ->and($taxData['bands']['higher']['end'])->toBe(10428)
+            ->and($taxData['bands']['additional']['start'])->toBe(10428);
     });
 });
 
@@ -108,7 +175,7 @@ describe('Scotland Region Tax Data', function () {
             ->and($rates['top'])->toBe(0.48);
     });
 
-    it('returns correct Scottish tax bands', function () {
+    it('returns correct Scottish tax bands with weekly period (default)', function () {
         $bands = $this->taxDataService->getBandsForRegion('scotland');
 
         expect($bands)->toHaveKey('starter')
@@ -119,19 +186,42 @@ describe('Scotland Region Tax Data', function () {
             ->and($bands)->toHaveKey('top')
             ->and($bands['starter']['start'])->toBe(241)
             ->and($bands['starter']['end'])->toBe(296)
-            ->and($bands['basic']['start'])->toBe(297)
+            ->and($bands['basic']['start'])->toBe(296)
             ->and($bands['basic']['end'])->toBe(528)
-            ->and($bands['intermediate']['start'])->toBe(529)
-            ->and($bands['intermediate']['end'])->toBe(840)
-            ->and($bands['higher']['start'])->toBe(841)
+            ->and($bands['intermediate']['start'])->toBe(528)
+            ->and($bands['intermediate']['end'])->toBe(839)
+            ->and($bands['higher']['start'])->toBe(839)
             ->and($bands['higher']['end'])->toBe(1442)
-            ->and($bands['advanced']['start'])->toBe(1443)
+            ->and($bands['advanced']['start'])->toBe(1442)
             ->and($bands['advanced']['end'])->toBe(2406)
-            ->and($bands['top']['start'])->toBe(2407)
+            ->and($bands['top']['start'])->toBe(2406)
+            ->and($bands['top']['end'])->toBeNull();
+    });
+    
+    it('returns correct Scottish tax bands with monthly period', function () {
+        $bands = $this->taxDataService->getBandsForRegion('scotland', 'monthly');
+
+        expect($bands)->toHaveKey('starter')
+            ->and($bands)->toHaveKey('basic')
+            ->and($bands)->toHaveKey('intermediate')
+            ->and($bands)->toHaveKey('higher')
+            ->and($bands)->toHaveKey('advanced')
+            ->and($bands)->toHaveKey('top')
+            ->and($bands['starter']['start'])->toBe(1047)
+            ->and($bands['starter']['end'])->toBe(1283)
+            ->and($bands['basic']['start'])->toBe(1283)
+            ->and($bands['basic']['end'])->toBe(2290)
+            ->and($bands['intermediate']['start'])->toBe(2291)
+            ->and($bands['intermediate']['end'])->toBe(3638)
+            ->and($bands['higher']['start'])->toBe(3638)
+            ->and($bands['higher']['end'])->toBe(6250)
+            ->and($bands['advanced']['start'])->toBe(6250)
+            ->and($bands['advanced']['end'])->toBe(10428)
+            ->and($bands['top']['start'])->toBe(10428)
             ->and($bands['top']['end'])->toBeNull();
     });
 
-    it('gets complete tax data for Scottish tax code', function () {
+    it('gets complete tax data for Scottish tax code with weekly period (default)', function () {
         $taxCode = $this->taxCodeParser->parseTaxCode('S1257L');
         $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode);
 
@@ -139,7 +229,36 @@ describe('Scotland Region Tax Data', function () {
             ->and($taxData['rates']['starter'])->toBe(0.19)
             ->and($taxData['rates']['basic'])->toBe(0.20)
             ->and($taxData['bands']['starter']['start'])->toBe(241)
-            ->and($taxData['bands']['basic']['start'])->toBe(297);
+            ->and($taxData['bands']['starter']['end'])->toBe(296)
+            ->and($taxData['bands']['basic']['start'])->toBe(296)
+            ->and($taxData['bands']['basic']['end'])->toBe(528)
+            ->and($taxData['bands']['intermediate']['start'])->toBe(528)
+            ->and($taxData['bands']['intermediate']['end'])->toBe(839)
+            ->and($taxData['bands']['higher']['start'])->toBe(839)
+            ->and($taxData['bands']['higher']['end'])->toBe(1442)
+            ->and($taxData['bands']['advanced']['start'])->toBe(1442)
+            ->and($taxData['bands']['advanced']['end'])->toBe(2406)
+            ->and($taxData['bands']['top']['start'])->toBe(2406);
+    });
+    
+    it('gets complete tax data for Scottish tax code with monthly period', function () {
+        $taxCode = $this->taxCodeParser->parseTaxCode('S1257L');
+        $taxData = $this->taxDataService->getTaxDataForTaxCode($taxCode, 'monthly');
+
+        expect($taxCode->region)->toBe('scotland')
+            ->and($taxData['rates']['starter'])->toBe(0.19)
+            ->and($taxData['rates']['basic'])->toBe(0.20)
+            ->and($taxData['bands']['starter']['start'])->toBe(1047)
+            ->and($taxData['bands']['starter']['end'])->toBe(1283)
+            ->and($taxData['bands']['basic']['start'])->toBe(1283)
+            ->and($taxData['bands']['basic']['end'])->toBe(2290)
+            ->and($taxData['bands']['intermediate']['start'])->toBe(2291)
+            ->and($taxData['bands']['intermediate']['end'])->toBe(3638)
+            ->and($taxData['bands']['higher']['start'])->toBe(3638)
+            ->and($taxData['bands']['higher']['end'])->toBe(6250)
+            ->and($taxData['bands']['advanced']['start'])->toBe(6250)
+            ->and($taxData['bands']['advanced']['end'])->toBe(10428)
+            ->and($taxData['bands']['top']['start'])->toBe(10428);
     });
 });
 
