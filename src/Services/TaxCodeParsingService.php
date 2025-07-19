@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PayPHP\Services;
 
 use InvalidArgumentException;
-use PayPHP\Actions\CalculateWeeklyTaxAllowance;
+use PayPHP\Actions\CalculateTaxAllowance;
 use PayPHP\Dto\TaxCode;
 
 final class TaxCodeParsingService
@@ -145,7 +145,7 @@ final class TaxCodeParsingService
 
     private function setAllowanceFromNumericPart(int $numericPart, string $suffix, TaxCode $taxCodeObj): void
     {
-        $taxCodeObj->allowance = CalculateWeeklyTaxAllowance::calculate($numericPart);
+        $taxCodeObj->allowance = CalculateTaxAllowance::calculate($numericPart);
     }
 
     private function getSpecialCodes(): array

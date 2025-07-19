@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PayPHP\Actions;
 
-final class CalculateWeeklyTaxAllowance
+final class CalculateTaxAllowance
 {
-    public static function calculate(int $taxCodeNumericPart): float
+    public static function calculate(int $taxCodeNumericPart, string $period = 'weekly'): float
     {
         if ($taxCodeNumericPart === 0) {
             return 0.00;
@@ -23,8 +23,9 @@ final class CalculateWeeklyTaxAllowance
         $weeklyRemainderValue = self::ceilToNearestPenny($annualRemainderValue / 52);
         $totalWeeklyFreePay = $weeklyRemainderValue + $weeklyQuotientValue;
 
-        return $totalWeeklyFreePay;
-
+        return $period === 'weekly'
+            ? $totalWeeklyFreePay
+            : ceil($totalWeeklyFreePay * (52 / 12) * 100) / 100;
     }
 
     private static function ceilToNearestPenny($value): float|int
