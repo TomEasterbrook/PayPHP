@@ -1,21 +1,21 @@
 {
   "taxYear": "2025-26",
-  "personalAllowance": 12570,
+  "personalAllowance": 241,
   "regions": {
     "uk": {
       "basicRate": 0.20,
       "higherRate": 0.40,
       "additionalRate": 0.45,
       "basicRateBand": {
-        "start": 12571,
-        "end": 50270
+        "start": 241,
+        "end": 966
       },
       "higherRateBand": {
-        "start": 50271,
-        "end": 125140
+        "start": 967,
+        "end": 2406
       },
       "additionalRateBand": {
-        "start": 125141,
+        "start": 2407,
         "end": null
       }
     },
@@ -24,15 +24,15 @@
       "higherRate": 0.40,
       "additionalRate": 0.45,
       "basicRateBand": {
-        "start": 12571,
-        "end": 50270
+        "start": 241,
+        "end": 966
       },
       "higherRateBand": {
-        "start": 50271,
-        "end": 125140
+        "start": 967,
+        "end": 2406
       },
       "additionalRateBand": {
-        "start": 125141,
+        "start": 2407,
         "end": null
       }
     },
@@ -44,51 +44,51 @@
       "advancedRate": 0.45,
       "topRate": 0.48,
       "starterRateBand": {
-        "start": 12571,
-        "end": 15397
+        "start": 241,
+        "end": 296
       },
       "basicRateBand": {
-        "start": 15398,
-        "end": 27491
+        "start": 297,
+        "end": 528
       },
       "intermediateRateBand": {
-        "start": 27492,
-        "end": 43662
+        "start": 529,
+        "end": 840
       },
       "higherRateBand": {
-        "start": 43663,
-        "end": 75000
+        "start": 841,
+        "end": 1442
       },
       "advancedRateBand": {
-        "start": 75001,
-        "end": 125140
+        "start": 1443,
+        "end": 2406
       },
       "topRateBand": {
-        "start": 125141,
+        "start": 2407,
         "end": null
       }
     }
   },
   "ni": {
     "class1Employee": {
-      "primaryThresholdAnnual": 12570,
-      "upperEarningsLimit": 50270,
+      "primaryThreshold": 241,
+      "upperEarningsLimit": 966,
       "lowerRate": 0.08,
       "upperRate": 0.02
     },
     "class1Employer": {
-      "secondaryThresholdAnnual": 5000,
+      "secondaryThreshold": 96,
       "rate": 0.15
     }
   },
   "studentLoan": {
-    "plan1Threshold": 26065,
+    "plan1Threshold": 501,
     "plan1Rate": 0.09,
-    "plan2Threshold": 28470,
+    "plan2Threshold": 547,
     "plan2Rate": 0.09,
-    "plan4Threshold": 32745,
+    "plan4Threshold": 629,
     "plan4Rate": 0.09,
-    "postgradThreshold": 21000,
+    "postgradThreshold": 403,
     "postgradRate": 0.06
   }
 }
