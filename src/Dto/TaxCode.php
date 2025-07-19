@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace PayPHP\Dto;
 
-use Money\Currency;
-use Money\Money;
-
 final class TaxCode
 {
     public string $code;
 
-    public Money $allowance;
+    public float $allowance;
 
     public bool $isAllowanceNegative = false;
 
@@ -24,11 +21,6 @@ final class TaxCode
     public int $numericPart;
 
     public string $region = 'uk'; // Default to UK
-
-    public function __construct()
-    {
-        $this->allowance = new Money(0, new Currency('GBP'));
-    }
 
     public function shouldUseFlatRate(): bool
     {
