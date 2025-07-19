@@ -1,0 +1,94 @@
+{
+  "taxYear": "2025-26",
+  "personalAllowance": 12570,
+  "regions": {
+    "uk": {
+      "basicRate": 0.20,
+      "higherRate": 0.40,
+      "additionalRate": 0.45,
+      "basicRateBand": {
+        "start": 12571,
+        "end": 50270
+      },
+      "higherRateBand": {
+        "start": 50271,
+        "end": 125140
+      },
+      "additionalRateBand": {
+        "start": 125141,
+        "end": null
+      }
+    },
+    "wales": {
+      "basicRate": 0.20,
+      "higherRate": 0.40,
+      "additionalRate": 0.45,
+      "basicRateBand": {
+        "start": 12571,
+        "end": 50270
+      },
+      "higherRateBand": {
+        "start": 50271,
+        "end": 125140
+      },
+      "additionalRateBand": {
+        "start": 125141,
+        "end": null
+      }
+    },
+    "scotland": {
+      "starterRate": 0.19,
+      "basicRate": 0.20,
+      "intermediateRate": 0.21,
+      "higherRate": 0.42,
+      "advancedRate": 0.45,
+      "topRate": 0.48,
+      "starterRateBand": {
+        "start": 12571,
+        "end": 15397
+      },
+      "basicRateBand": {
+        "start": 15398,
+        "end": 27491
+      },
+      "intermediateRateBand": {
+        "start": 27492,
+        "end": 43662
+      },
+      "higherRateBand": {
+        "start": 43663,
+        "end": 75000
+      },
+      "advancedRateBand": {
+        "start": 75001,
+        "end": 125140
+      },
+      "topRateBand": {
+        "start": 125141,
+        "end": null
+      }
+    }
+  },
+  "ni": {
+    "class1Employee": {
+      "primaryThresholdAnnual": 12570,
+      "upperEarningsLimit": 50270,
+      "lowerRate": 0.08,
+      "upperRate": 0.02
+    },
+    "class1Employer": {
+      "secondaryThresholdAnnual": 5000,
+      "rate": 0.15
+    }
+  },
+  "studentLoan": {
+    "plan1Threshold": 26065,
+    "plan1Rate": 0.09,
+    "plan2Threshold": 28470,
+    "plan2Rate": 0.09,
+    "plan4Threshold": 32745,
+    "plan4Rate": 0.09,
+    "postgradThreshold": 21000,
+    "postgradRate": 0.06
+  }
+}
