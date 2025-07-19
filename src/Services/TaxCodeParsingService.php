@@ -52,7 +52,9 @@ final class TaxCodeParsingService
         }
 
         if ($this->isKCode($cleanCode)) {
-            $this->handleKCode($cleanCode, $taxCodeObj);
+            $this->handleStandardCode($cleanCode, $taxCodeObj);
+            $taxCodeObj->suffix = 'K';
+            $taxCodeObj->isAllowanceNegative = true;
 
             return;
         }
@@ -94,34 +96,14 @@ final class TaxCodeParsingService
         $taxCodeObj->allowance = new Money((int) ($codeData['allowance'] * 100), new Currency('GBP'));
     }
 
-    private function handleKCode(string $code, TaxCode $taxCodeObj): void
-    {
-        preg_match('/^K(\d+)$/', $code, $matches);
-        $taxCodeObj->suffix = 'K';
-        $taxCodeObj->numericPart = (int) $matches[1];
-        $taxCodeObj->isAllowanceNegative = true;
-        $taxCodeObj->allowance = new Money((int) ((int) $matches[1] * 10 * 100), new Currency('GBP'));
-    }
-
     private function handleStandardCode(string $code, TaxCode $taxCodeObj): void
     {
-        preg_match('/^(\d+)([LMNT])$/', $code, $matches);
+        preg_match('/^(\d+)([LMNTk])$/', $code, $matches);
 
         $numericPart = (int) $matches[1];
         $suffix = $matches[2];
-
-        $baseAllowance = $numericPart * 10;
-
-        // Apply Marriage Allowance adjustments
-        if ($suffix === 'M') {
-            // +10%
-            $adjustedAllowance = round($baseAllowance * 1.10, 2);
-        } elseif ($suffix === 'N') {
-            // -10%
-            $adjustedAllowance = round($baseAllowance * 0.90, 2);
-        } else {
-            $adjustedAllowance = $baseAllowance;
-        }
+        // TODO: Implement full IT Spec Logic for allowances
+        $adjustedAllowance = $numericPart;
 
         $taxCodeObj->numericPart = $numericPart;
         $taxCodeObj->suffix = $suffix;
